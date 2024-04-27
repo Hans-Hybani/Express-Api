@@ -7,8 +7,6 @@ const Catway = require('./models/catway');
 const Reservation = require('./models/reservation');
 const Users = require('./models/user');
 const userCtrl = require('./controllers/log');
-const user = require('./models/user');
-const reservation = require('./models/reservation');
 
 mongoose.connect('mongodb+srv://PlaisanceApi:YAFvqsdsFdTFBeTE@cluster0.x3yul8n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
   { useNewUrlParser: true,
@@ -72,7 +70,7 @@ app.patch('/api/catways/:id', cors(), (req, res, next) => {
     });
 
 // DELETE / catways/:id
-app.delete('/api/catway/:id', cors(), (req, res, next) => {
+app.delete('/api/catway/:id', cors(), userCtrl, (req, res, next) => {
         Catway.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
           .catch(error => res.status(400).json({ error }));
@@ -104,7 +102,7 @@ app.post('/api/reservation', cors(), (req, res, next) =>{
 });
 
 // DELETE / catway/:id/reservations/:idReservation
-app.delete('/api/catway/:catwayId/reservations/:reservationId', cors(), (req, res, next) => {
+app.delete('/api/catway/:catwayId/reservations/:reservationId', cors(), userCtrl, (req, res, next) => {
         Reservation.deleteOne({ _id: req.params.reservationId })
             .then(() => res.status(200).json({ message: 'Réservation supprimée !' }))
             .catch(error => res.status(400).json({ error }));
@@ -119,7 +117,7 @@ app.get('/api/users', cors(), (req, res, next) => {
       });
 
 // Supprimez un utilisateur
-app.delete('/api/user/:id', cors(), (req, res, next) => {
+app.delete('/api/user/:id', cors(), userCtrl, (req, res, next) => {
         Users.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: 'Utilisateur supprimé !'}))
           .catch(error => res.status(400).json({ error }));
