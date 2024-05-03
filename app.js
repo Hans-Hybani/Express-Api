@@ -9,7 +9,8 @@ const Users = require('./models/user');
 const userCtrl = require('./controllers/log');
 const user = require('./models/user');
 
-const auth = require('./middleware/auth')
+const auth = require('./middleware/auth');
+
 
 mongoose.connect('mongodb+srv://PlaisanceApi:YAFvqsdsFdTFBeTE@cluster0.x3yul8n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
   { useNewUrlParser: true,
@@ -29,12 +30,12 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 // Authentification route 
-app.post('/signup', cors(), userCtrl.signup);
-app.post('/login', cors(), userCtrl.login);
+app.post('/signup', auth, cors(), userCtrl.signup);
+app.post('/login',  cors(), userCtrl.login);
 
 // Catways Route
 // GET /catways
-app.get('/api/catways', cors(), (req, res, next) => {
+app.get('/api/catways', auth, cors(), (req, res, next) => {
         Catway.find()
           .then(catways => res.status(200).json(catways))
           .catch(error => res.status(400).json({ error }));
@@ -48,7 +49,7 @@ app.get('/api/catway/:id', cors(), (req, res, next) => {
 });
 
 // POST / catways
-app.post('/api/catway', cors(), (req, res, next) =>{
+app.post('/api/catway', auth, cors(), (req, res, next) =>{
         const catway = new Catway({
                 
                 ...req.body
@@ -73,15 +74,15 @@ app.patch('/api/catways/:id', cors(), (req, res, next) => {
     });
 
 // DELETE / catways/:id
-app.delete('/api/catway/:id', cors(), auth, (req, res, next) => {
+app.delete('/api/catway/:id', auth, cors(), (req, res, next) => {
         Catway.deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+          .then(() => res.status(200).json({ message: 'Catway supprimé !'}))
           .catch(error => res.status(400).json({ error }));
 });
 
 // Reservation Route
 // GET / catways /:id/reservations, à revoir !
-app.get('/api/reservations', cors(), (req, res, next) => {
+app.get('/api/reservations', auth, cors(), (req, res, next) => {
         Reservation.find()
           .then(reservation => res.status(200).json(reservation))
           .catch(error => res.status(400).json({ error }));
@@ -95,7 +96,7 @@ app.get('/api/reservation/:id', cors(), (req, res, next) => {
 });
 
 //POST / catways/:id/reservations
-app.post('/api/reservation', cors(), (req, res, next) =>{
+app.post('/api/reservation', auth, cors(), (req, res, next) =>{
         const reservation = new Reservation({
                 ...req.body
         })
@@ -105,7 +106,7 @@ app.post('/api/reservation', cors(), (req, res, next) =>{
 });
 
 // DELETE / catway/:id/reservations/:idReservation
-app.delete('/api/catway/:catwayId/reservations/:reservationId', cors(), auth,(req, res, next) => {
+app.delete('/api/catway/:catwayId/reservations/:reservationId',auth, cors(),(req, res, next) => {
         Reservation.deleteOne({ _id: req.params.reservationId })
             .then(() => res.status(200).json({ message: 'Réservation supprimée !' }))
             .catch(error => res.status(400).json({ error }));
@@ -120,7 +121,7 @@ app.get('/api/users', cors(), (req, res, next) => {
       });
 
 // Supprimez un utilisateur
-app.delete('/api/user/:id', cors(), auth, (req, res, next) => {
+app.delete('/api/user/:id', auth, cors(), (req, res, next) => {
         Users.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: 'Utilisateur supprimé !'}))
           .catch(error => res.status(400).json({ error }));
