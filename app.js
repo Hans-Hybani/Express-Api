@@ -7,7 +7,7 @@ const Catway = require('./models/catway');
 const Reservation = require('./models/reservation');
 const Users = require('./models/user');
 const userCtrl = require('./controllers/log');
-const user = require('./models/user');
+const userAdd = require('./controllers/log');
 
 const auth = require('./middleware/auth');
 
@@ -31,7 +31,11 @@ app.use(bodyParser.json());
 
 // Authentification route 
 app.post('/signup', cors(), userCtrl.signup);
+
+app.post('/AddUser', auth, cors(), userAdd.signup);
+
 app.post('/login', cors(), userCtrl.login);
+
 
 // Catways Route
 // GET /catways
@@ -49,7 +53,7 @@ app.get('/api/catway/:id', cors(), (req, res, next) => {
 });
 
 // POST / catways
-app.post('/api/catway', cors(), (req, res, next) =>{
+app.post('/api/catway', auth, cors(), (req, res, next) =>{
         const catway = new Catway({
                 
                 ...req.body
@@ -74,7 +78,7 @@ app.patch('/api/catways/:id', cors(), (req, res, next) => {
     });
 
 // DELETE / catways/:id
-app.delete('/api/catway/:id', cors(), (req, res, next) => {
+app.delete('/api/catway/:id', auth, cors(), (req, res, next) => {
         Catway.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
           .catch(error => res.status(400).json({ error }));
@@ -106,7 +110,7 @@ app.post('/api/reservation', cors(), (req, res, next) =>{
 });
 
 // DELETE / catway/:id/reservations/:idReservation
-app.delete('/api/catway/:catwayId/reservations/:reservationId', cors(),(req, res, next) => {
+app.delete('/api/catway/:catwayId/reservations/:reservationId', auth, cors(),(req, res, next) => {
         Reservation.deleteOne({ _id: req.params.reservationId })
             .then(() => res.status(200).json({ message: 'Réservation supprimée !' }))
             .catch(error => res.status(400).json({ error }));
