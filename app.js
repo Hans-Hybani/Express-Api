@@ -126,10 +126,36 @@ app.post('/api/catways/:id/reservations', cors(), async (req, res, next) => {
     });
 
 // DELETE / catway/:id/reservations/:idReservation
-app.delete('/api/catway/:catwayId/reservations/:reservationId', auth, cors(),(req, res, next) => {
-        Reservation.deleteOne({ _id: req.params.reservationId })
-            .then(() => res.status(200).json({ message: 'Réservation supprimée !' }))
-            .catch(error => res.status(400).json({ error }));
+// app.delete('/api/catway/:catwayId/reservations/:reservationId', auth, cors(),(req, res, next) => {
+//         Reservation.deleteOne({ _id: req.params.reservationId })
+//             .then(() => res.status(200).json({ message: 'Réservation supprimée !' }))
+//             .catch(error => res.status(400).json({ error }));
+//     });
+app.delete('/api/catway/:catwayId/reservations/:reservationId', auth, cors(), async (req, res, next) => {
+        try {
+            // Recherche du catway correspondant
+            const catway = await Catway.findById(req.params.catwayId);
+            
+            // Vérification si le catway existe
+            if (!catway) {
+                return res.status(404).json({ message: 'Le catway spécifié n\'existe pas.' });
+            }
+    
+            // Recherche de la réservation associée à ce catway
+            const reservation = await Reservation.findOne({ _id: req.params.reservationId, catwayNumber: catway.catwayNumber });
+            
+            // Vérification si la réservation existe
+            if (!reservation) {
+                return res.status(404).json({ message: 'La réservation spécifiée n\'existe pas pour ce catway.' });
+            }
+    
+            // Suppression de la réservation
+            await Reservation.deleteOne({ _id: req.params.reservationId });
+    
+            res.status(200).json({ message: 'Réservation supprimée !' });
+        } catch (error) {
+            res.status(400).json({ error });
+        }
     });
 
 // Crud Route pour la suppression et modification d'utilisateur 
