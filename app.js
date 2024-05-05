@@ -100,14 +100,38 @@ app.get('/api/reservation/:id', cors(), (req, res, next) => {
 });
 
 //POST / catways/:id/reservations
-app.post('/api/reservation', cors(), (req, res, next) =>{
-        const reservation = new Reservation({
-                ...req.body
-        })
-        reservation.save()
-        .then(() => res.status(201).json({ message : 'Réservation enregistrée !'}))
-        .catch(error => res.status(400).json({ error })); 
-});
+// app.post('/api/reservation', cors(), (req, res, next) =>{
+//         const reservation = new Reservation({
+//                 ...req.body
+//         })
+//         reservation.save()
+//         .then(() => res.status(201).json({ message : 'Réservation enregistrée !'}))
+//         .catch(error => res.status(400).json({ error })); 
+// });
+app.post('/api/reservation', cors(), async (req, res, next) => {
+        try {
+            // Recherche du catway correspondant
+            const catway = await Catway.findOne({ catwayNumber: req.body.catwayNumber });
+            
+            // Vérification si le catway existe
+            if (!catway) {
+                return res.status(404).json({ message: 'Le catway spécifié n\'existe pas.' });
+            }
+    
+            // Création de la réservation
+            const reservation = new Reservation({
+                ...req.body,
+                catwayNumber: req.body.catwayNumber // Ajout du numéro de catway à la réservation
+            });
+    
+            // Enregistrement de la réservation
+            await reservation.save();
+    
+            res.status(201).json({ message: 'Réservation enregistrée !' });
+        } catch (error) {
+            res.status(400).json({ error });
+        }
+    });
 
 // DELETE / catway/:id/reservations/:idReservation
 app.delete('/api/catway/:catwayId/reservations/:reservationId', auth, cors(),(req, res, next) => {
