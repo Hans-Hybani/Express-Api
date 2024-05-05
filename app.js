@@ -126,7 +126,7 @@ app.post('/api/catways/:id/reservations', cors(), async (req, res, next) => {
     });
 
 // DELETE / catway/:id/reservations/:idReservation
-app.delete('/api/catway/:catwayId/reservations/:reservationId', auth, cors(),(req, res, next) => {
+app.delete('/api/reservation/:id', auth, cors(), (req, res, next) => {
         Reservation.deleteOne({ _id: req.params.reservationId })
             .then(() => res.status(200).json({ message: 'Réservation supprimée !' }))
             .catch(error => res.status(400).json({ error }));
