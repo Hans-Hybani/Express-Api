@@ -100,15 +100,7 @@ app.get('/api/reservation/:id', cors(), (req, res, next) => {
 });
 
 //POST / catways/:id/reservations
-// app.post('/api/reservation', cors(), (req, res, next) =>{
-//         const reservation = new Reservation({
-//                 ...req.body
-//         })
-//         reservation.save()
-//         .then(() => res.status(201).json({ message : 'Réservation enregistrée !'}))
-//         .catch(error => res.status(400).json({ error })); 
-// });
-app.post('/api/reservation', cors(), async (req, res, next) => {
+app.post('/api/catways/:id/reservations', cors(), async (req, res, next) => {
         try {
             // Recherche du catway correspondant
             const catway = await Catway.findOne({ catwayNumber: req.body.catwayNumber });
