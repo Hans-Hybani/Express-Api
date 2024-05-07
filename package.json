@@ -4,8 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha",
-    "vercel-build": "echo hello"
+    "test": "mocha mocha_test/test/*.js",
+    "vercel-build": "echo hello",
+    "start": "npm run test && nodemon server.js"
   },
   "author": "",
   "license": "ISC",

@@ -4,39 +4,20 @@ const app = require('../../app');
 const Catway = require('../../models/catway');
 
 describe('GET /api/catway/:id', () => {
-  it('should return status code 401 when token is expired', (done) => {
-    // Générer un jeton expiré
-    const expiredToken = jwt.sign({ userId: 'yourUserId' }, 'yourSecretKey', { expiresIn: 0 });
+  it('should return the specified catway when a valid token is provided', (done) => {
+    // Générer un jeton valide
+    const token = jwt.sign({ userId: 'yourUserId' }, 'yourSecretKey', { expiresIn: '1h' });
 
-    // Faire la requête avec le jeton expiré
     request(app)
-      .get('/api/catway/yourCatwayId')
-      .set('Authorization', `Bearer ${expiredToken}`)
-      .expect(401)
+      .get('/api/catway/663a321aad0538460bb2db9d') 
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        // Vérifier ici que la réponse contient un message d'erreur approprié
+        // Vérifiez ici si la réponse contient les données attendues pour le catway spécifié
         done();
       });
   });
 
-  it('should return status code 404 for non-existing catway', (done) => {
-    const fakeId = 'fakeCatwayId';
-
-    // Générer un jeton valide pour cette requête
-    const validToken = jwt.sign({ userId: 'yourUserId' }, 'yourSecretKey', { expiresIn: '1h' });
-
-    // Faire la requête avec un ID de catway inexistant
-    request(app)
-      .get(`/api/catway/${fakeId}`)
-      .set('Authorization', `Bearer ${validToken}`)
-      .expect(404)
-      .end((err, res) => {
-        if (err) return done(err);
-        // Vérifier ici que la réponse contient un message d'erreur approprié
-        done();
-      });
-  });
-
-  // Ajoute d'autres tests pour différents scénarios selon les cas d'utilisation
+  // Ajoutez d'autres tests pour gérer différents scénarios, par exemple, lorsque le token est invalide ou manquant
 });

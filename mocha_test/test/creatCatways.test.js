@@ -14,7 +14,6 @@ describe('POST /api/catway', () => {
       type: 'long'
     };
 
-    // Faire la requête pour créer un nouveau catway avec le token expiré
     request(app)
       .post('/api/catway')
       .set('Authorization', `Bearer ${expiredToken}`)
@@ -22,7 +21,6 @@ describe('POST /api/catway', () => {
       .expect(401)
       .end((err, res) => {
         if (err) return done(err);
-        // Vérifier ici que la réponse contient le message approprié
         done();
       });
   });
