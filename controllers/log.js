@@ -2,6 +2,13 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken')
 
+/**
+ * Fonction pour inscrire un nouvel utilisateur.
+ * @param {object} req - L'objet représentant la requête HTTP.
+ * @param {object} res - L'objet représentant la réponse HTTP.
+ * @param {function} next - La fonction middleware suivante dans la pile des middlewares.
+ * @returns {void} Ne retourne rien.
+ */
 exports.signup = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
@@ -16,7 +23,13 @@ exports.signup = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
 };
-
+/**
+ * Fonction pour connecter un utilisateur existant.
+ * @param {object} req - L'objet représentant la requête HTTP.
+ * @param {object} res - L'objet représentant la réponse HTTP.
+ * @param {function} next - La fonction middleware suivante dans la pile des middlewares.
+ * @returns {void} Ne retourne rien.
+ */
 exports.login = (req, res, next) => {
    User.findOne({ email: req.body.email })
        .then(user => {
