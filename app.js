@@ -65,7 +65,7 @@ app.post('/AddUser', auth, cors(), userAdd.signup);
  * @returns {void} Ne retourne rien.
  */
 // GET /catways
-app.get('/api/catways', cors(), (req, res, next) => {
+app.get('/api/catways', auth, cors(), (req, res, next) => {
         Catway.find()
           .then(catways => res.status(200).json(catways))
           .catch(error => res.status(400).json({ error }));
@@ -152,7 +152,7 @@ app.delete('/api/catway/:id', auth, cors(), (req, res, next) => {
  * @returns {void} Ne retourne rien.
  */
 // GET / catways /:id/reservations
-app.get('/api/reservations', cors(), (req, res, next) => {
+app.get('/api/reservations', auth, cors(), (req, res, next) => {
         Reservation.find()
           .then(reservation => res.status(200).json(reservation))
           .catch(error => res.status(400).json({ error }));
@@ -182,7 +182,7 @@ app.get('/api/reservation/:id', cors(), (req, res, next) => {
  * @returns {void} Ne retourne rien.
  */
 //POST / catways/:id/reservations
-app.post('/api/catways/:id/reservations', cors(), async (req, res, next) => {
+app.post('/api/catways/:id/reservations', auth, cors(), async (req, res, next) => {
         try {
             // Recherche du catway correspondant
             const catway = await Catway.findOne({ catwayNumber: req.body.catwayNumber });
