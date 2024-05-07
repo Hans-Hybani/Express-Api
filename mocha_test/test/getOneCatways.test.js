@@ -21,7 +21,7 @@ describe('GET /api/catway/:id', () => {
   });
 
   it('should return status code 404 for non-existing catway', (done) => {
-    const fakeId = 1;
+    const fakeId = 'fakeCatwayId';
 
     // Générer un jeton valide pour cette requête
     const validToken = jwt.sign({ userId: 'yourUserId' }, 'yourSecretKey', { expiresIn: '1h' });
