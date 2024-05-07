@@ -14,7 +14,6 @@ describe('GET /api/catways', () => {
       .expect(401)
       .end((err, res) => {
         if (err) return done(err);
-        // Vérifier ici que la réponse contient un message d'erreur approprié
         done();
       });
   });
